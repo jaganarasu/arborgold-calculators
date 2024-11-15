@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, { useState } from 'react';
+import DateInput from './assets/components/DateInput';
+import ResultDisplay from './assets/components/ResultDisplay';
+import { calculateDateDifference } from './assets/utils/dateUtils';
+import ToggleSwitch from './assets/components/ToggleSwitch';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import './App.css'
+import '@fontsource/nunito-sans';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [includeEndDay, setIncludeEndDay] = useState(false);
+  const [result, setResult] = useState(null);
 
+  const handleCalculate = () => {
+    if (startDate && endDate) {
+      const calculation = calculateDateDifference(startDate, endDate, includeEndDay);
+      setResult(calculation);
+    }
+  };
+  
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div style={{ padding: '20px', fontFamily: 'Nunito Sans' }}>
+      <h1>Date Calculator</h1>
+      
+      <DateInput label="Start Date:" value={startDate} onChange={setStartDate} />
+      <DateInput label="End Date:" value={endDate} onChange={setEndDate} />
+      <ToggleSwitch label="Include All Days?" checked={includeEndDay} onChange={setIncludeEndDay} />
 
-export default App
+ 
+      
+      <button onClick={handleCalculate} style={{ marginTop: '10px' }}>Calculate</button>
+
+      {result && <ResultDisplay result={result} />}
+    </div>
+  );
+};
+
+export default App;
